@@ -16,19 +16,22 @@ class TestProducts:
     Тестовый класс - это способ группировки ваших тестов по какой-то тематике
     Например, текущий класс группирует тесты на класс Product
     """
+    quantity_values = (999, 1000, 1001, 0, -1, True, False, "string")
 
-    def test_product_check_quantity(self, product):
+    @pytest.mark.parametrize("quantity", quantity_values)
+    def test_product_check_quantity(self, product, quantity):
         # TODO напишите проверки на метод check_quantity
-        pass
+        assert product.check_quantity(quantity)
 
-    def test_product_buy(self, product):
+    @pytest.mark.parametrize("quantity", quantity_values)
+    def test_product_buy(self, product, quantity):
         # TODO напишите проверки на метод buy
-        pass
+        assert product.buy(quantity)
 
     def test_product_buy_more_than_available(self, product):
         # TODO напишите проверки на метод buy,
         #  которые ожидают ошибку ValueError при попытке купить больше, чем есть в наличии
-        pass
+        assert product.buy(quantity=10000)
 
 
 class TestCart:
