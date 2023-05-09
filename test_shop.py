@@ -65,6 +65,18 @@ class TestCart:
         cart.remove_product(product, remove_count=10)
         assert cart.products == {}
 
+    def test_remove_product_all_without_remove_count(self, product):
+        cart = Cart()
+        cart.add_product(product, 10)
+        cart.remove_product(product)
+        assert cart.products == {}
+
+    def test_remove_more_products_than_there_are_in_the_cart(self, product):
+        cart = Cart()
+        cart.add_product(product, 10)
+        cart.remove_product(product, remove_count=20)
+        assert cart.products == {}
+
     def test_clear_cart(self, product):
         cart = Cart()
         cart.add_product(product)
