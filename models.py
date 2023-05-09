@@ -7,13 +7,13 @@ class Product:
     description: str
     quantity: int
 
-    def __init__(self, name, price, description, quantity):
+    def __init__(self, name: str, price: float, description: str, quantity: int):
         self.name = name
         self.price = price
         self.description = description
         self.quantity = quantity
 
-    def check_quantity(self, quantity) -> bool:
+    def check_quantity(self, quantity: int) -> bool:
         """
         TODO Верните True если количество продукта больше или равно запрашиваемому
             и False в обратном случае
@@ -32,7 +32,8 @@ class Product:
         else:
             raise ValueError("Продуктов не хватает!")
 
-    def __hash__(self):
+    def __hash__(self) -> int:
+        """Метод принимает строку 'value' и возвращает целочисленный хеш-код"""
         return hash(self.name + self.description)
 
 
@@ -45,11 +46,11 @@ class Cart:
     # Словарь продуктов и их количество в корзине
     products: dict[Product, int]
 
-    def __init__(self):
+    def __init__(self) -> None:
         # По-умолчанию корзина пустая
         self.products = {}
 
-    def add_product(self, product: Product, buy_count=1):
+    def add_product(self, product: Product, buy_count: int = 1) -> None:
         """
         Метод добавления продукта в корзину.
         Если продукт уже есть в корзине, то увеличиваем количество
@@ -59,18 +60,18 @@ class Cart:
         else:
             self.products[product] = buy_count
 
-    def remove_product(self, product: Product, remove_count=None):
+    def remove_product(self, product: Product, remove_count: int = None) -> None:
         """
         Метод удаления продукта из корзины.
         Если remove_count не передан, то удаляется вся позиция
         Если remove_count больше, чем количество продуктов в позиции, то удаляется вся позиция
         """
-        if remove_count is None or remove_count > self.products[product]:
+        if remove_count is None or remove_count >= self.products[product]:
             del self.products[product]
         else:
             self.products[product] -= remove_count
 
-    def clear(self):
+    def clear(self) -> None:
         """Метод очищает корзину покупок"""
         self.products.clear()
 
@@ -78,15 +79,17 @@ class Cart:
         """Метод возвращает сумму за все товары в корзине"""
         return sum(product.price * quantity for product, quantity in self.products.items())
 
-    def buy(self):
+    def buy(self) -> None:
         """
         Метод покупки.
         Учтите, что товаров может не хватать на складе.
         В этом случае нужно выбросить исключение ValueError
         """
-        if len(self.products) > 0:
-            for product, quantity in self.products.items():
-                product.quantity -= quantity
-            self.clear()
-        else:
-            raise ValueError(f"Отсутствуют товары на складе!")
+        if not self.products:
+            raise ValueError("Отсутствуют товары в корзине!")
+        for product, quantity in self.products.items():
+            if not product.check_quantity(quantity):
+                raise ValueError(f"Недостаточное количество {product.name} на складе!")
+        for product, quantity in self.products.items():
+            product.quantity -= quantity
+        self.clear()
