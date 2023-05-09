@@ -3,7 +3,7 @@
 """
 import pytest
 
-from models import Product
+from models import Product, Cart
 
 
 @pytest.fixture
@@ -41,3 +41,38 @@ class TestCart:
         На некоторые методы у вас может быть несколько тестов.
         Например, негативные тесты, ожидающие ошибку (используйте pytest.raises, чтобы проверить это)
     """
+
+    def test_add_product(self, product):
+        cart = Cart()
+        cart.add_product(product)
+        assert cart.products == {product: 1}
+
+    def test_remove_product(self, product):
+        cart = Cart()
+        cart.add_product(product, 10)
+        cart.remove_product(product, remove_count=1)
+        assert cart.products == {product: 9}
+
+    def test_clear_cart(self, product):
+        cart = Cart()
+        cart.add_product(product)
+        cart.clear()
+        assert cart.products == {}
+
+    def test_get_total_price(self, product):
+        cart = Cart()
+        cart.add_product(product, 10)
+        assert cart.get_total_price() == 1000
+
+    def test_buy(self, product):
+        cart = Cart()
+        cart.add_product(product)
+        cart.buy()
+        assert cart.products == {}
+
+    def test_buy_raises(self, product):
+        cart = Cart()
+        cart.add_product(product)
+        cart.clear()
+        with pytest.raises(ValueError, match='Отсутствуют товары на складе!'):
+            cart.buy()
