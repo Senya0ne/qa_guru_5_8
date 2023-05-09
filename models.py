@@ -1,3 +1,7 @@
+from dataclasses import dataclass, field
+
+
+@dataclass
 class Product:
     """
     Класс продукта
@@ -6,12 +10,6 @@ class Product:
     price: float
     description: str
     quantity: int
-
-    def __init__(self, name: str, price: float, description: str, quantity: int):
-        self.name = name
-        self.price = price
-        self.description = description
-        self.quantity = quantity
 
     def check_quantity(self, quantity: int) -> bool:
         """
@@ -37,6 +35,7 @@ class Product:
         return hash(self.name + self.description)
 
 
+@dataclass
 class Cart:
     """
     Класс корзины. В нем хранятся продукты, которые пользователь хочет купить.
@@ -44,11 +43,7 @@ class Cart:
     """
 
     # Словарь продуктов и их количество в корзине
-    products: dict[Product, int]
-
-    def __init__(self) -> None:
-        # По-умолчанию корзина пустая
-        self.products = {}
+    products: dict[Product, int] = field(default_factory=dict)
 
     def add_product(self, product: Product, buy_count: int = 1) -> None:
         """
