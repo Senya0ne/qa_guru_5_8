@@ -45,7 +45,7 @@ class Cart:
     # Словарь продуктов и их количество в корзине
     products: dict[Product, int] = field(default_factory=dict)
 
-    def add_product(self, product: Product, buy_count: int = 1) -> None:
+    def add_product(self, product: Product, buy_count: int = 1):
         """
         Метод добавления продукта в корзину.
         Если продукт уже есть в корзине, то увеличиваем количество
@@ -55,7 +55,7 @@ class Cart:
         else:
             self.products[product] = buy_count
 
-    def remove_product(self, product: Product, remove_count: int = None) -> None:
+    def remove_product(self, product: Product, remove_count: int = None):
         """
         Метод удаления продукта из корзины.
         Если remove_count не передан, то удаляется вся позиция
@@ -66,7 +66,7 @@ class Cart:
         else:
             self.products[product] -= remove_count
 
-    def clear(self) -> None:
+    def clear(self):
         """Метод очищает корзину покупок"""
         self.products.clear()
 
@@ -74,7 +74,7 @@ class Cart:
         """Метод возвращает сумму за все товары в корзине"""
         return sum(product.price * quantity for product, quantity in self.products.items())
 
-    def buy(self) -> None:
+    def buy(self):
         """
         Метод покупки.
         Учтите, что товаров может не хватать на складе.
@@ -86,5 +86,5 @@ class Cart:
             if not product.check_quantity(quantity):
                 raise ValueError(f"Недостаточное количество {product.name} на складе!")
         for product, quantity in self.products.items():
-            product.quantity -= quantity
+            product.buy(quantity)
         self.clear()
